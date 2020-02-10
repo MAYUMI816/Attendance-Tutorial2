@@ -15,7 +15,13 @@
     <%= render 'layouts/header' %>
    
     <div class="container">
+      <!-- 5. 5. 6 サクセスメッセージを表示しよう -->
+      <% flash.each do |message_type, msg| %>
+      <div class="alert alert-<%= message_type %>"><%= msg %></div>
+      <% end %>
       <%= yield %>
+      <%= debug(params) if Rails.env.development? %>
+    <!-- 5. 1 レイアウトにデバッグ情報を追加しよう-->
     </div>
   </body>
 </html>
