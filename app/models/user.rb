@@ -1,10 +1,12 @@
 class User < ApplicationRecord
-# 「remember_token」という仮想の属性を作成します。
+# 7. 1. 2 「remember_token」という仮想の属性を作成します。
   attr_accessor :remember_token
   before_save { self.email = email.downcase } 
   #（self.email）の値をdowncaseメソッドを使って小文字に変換します。
   
   validates :name,  presence: true, length: { maximum: 50 } #name 存在性/最大50文字まで
+  # 8. 1. 4 パスワードはスルーして更新できるようにする
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i # 4. 4. 4 メールアドレスの有効性を検証
   validates :email, presence: true, length: { maximum: 100 }, #email存在性/最大100文字まで/正規表現によるメールアドレスのフォーマット/一意であること
@@ -40,7 +42,7 @@ validates :password, presence: true, length: { minimum: 6 } #password/存在性/
   # トークンがダイジェストと一致すればtrueを返します。7. 1. 3 ログイン状態の永続的保持
   def authenticated?(remember_token) # 永続化セッション）処理の準備はOK
     # 7.2ダイジェストが存在しない場合はfalseを返して終了します。
-    return false if remember_digest.nil?
+    # return false if remember_digest.nil?
     BCrypt::Password.new(remember_digest).is_password?(remember_token) # rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
   end
   

@@ -13,8 +13,9 @@ class SessionsController < ApplicationController
       log_in user
       # 7. 3 チェックボックスを追加しよう
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      remember user # 7. 1. 3 rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
-      redirect_to user
+      remember_back_or user # 7. 1. 3 rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
+      # 8. 3redirect_back_orの引数にuserを指定することで、デフォルトのURLを設定
+      # redirect_to user
     else
       flash.now[:danger] = '認証に失敗しました。' # エラーメッセージ用のflash
       #flash.nowではレンダリングが終わっているページでフラッシュメッセージを表示することができます。つまり、「リダイレクトはしないがフラッシュを表示したい」時に使えます

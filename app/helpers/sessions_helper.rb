@@ -3,7 +3,7 @@ module SessionsHelper
 
   # 引数に渡されたユーザーオブジェクトでログインします。
   def log_in(user)
-    session[:user_id] = user.id 
+    session[:user_id] = user.id
     #このコードを実行すると、ユーザーのブラウザ内にある一時的cookiesに暗号化済みのuser.idが自動で生成されます。
   end
   
@@ -34,7 +34,7 @@ module SessionsHelper
   # 7. 1. 3それ以外の場合はcookiesに対応するユーザーを返します。
   def current_user
     if (user_id = session[:user_id]) # session[:user_id]
-       @current_user ||= User.find_by(id: user_id)# @current_user ||= User.find_by(id: session[:user_id])
+       @current_user ||= User.find_by(id: user_id) # @current_user ||= User.find_by(id: session[:user_id])
     elsif (user_id = cookies.signed[:user_id])
       user = User.find_by(id: user_id)
       if user && user.authenticated?(cookies[:remember_token])
@@ -44,8 +44,25 @@ module SessionsHelper
     end
   end
   
+  
+  # 8. 3 
+  # 渡されたユーザーがログイン済みのユーザーであればtrueを返します。
+  def current_user?(user)
+    user == current_user
+  end
+  
     # 現在ログイン中のユーザーがいればtrue、そうでなければfalseを返します。
   def logged_in?
     !current_user.nil?
+  end
+  
+    # 8. 3 記憶しているURL(またはデフォルトURL)にリダイレクトします。
+  def redirect_back_or(default_url)
+    redirect_to(session[:forwarding_url] || default_url)
+    session.delete(:forwarding_url)
+  end
+# 8. 3 アクセスしようとしたURLを記憶します。
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
   end
 end
