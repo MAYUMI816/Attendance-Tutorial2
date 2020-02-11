@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
+  
   def new
   end
-  
   
   # 6. 2. 2 ユーザーの検索と認証
   def create
@@ -11,10 +11,12 @@ class SessionsController < ApplicationController
      # &&は取得したユーザーオブジェクトが有効か判定するために使用
       # 6. 3. 1ログイン後にユーザー情報ページにリダイレクトします。
       log_in user
+      # 7. 3 チェックボックスを追加しよう
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+      remember user # 7. 1. 3 rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
       redirect_to user
     else
-      # ここにはエラーメッセージ用のflashを入れます。
-      flash.now[:danger] = '認証に失敗しました。' 
+      flash.now[:danger] = '認証に失敗しました。' # エラーメッセージ用のflash
       #flash.nowではレンダリングが終わっているページでフラッシュメッセージを表示することができます。つまり、「リダイレクトはしないがフラッシュを表示したい」時に使えます
       render :new
     end
@@ -22,9 +24,9 @@ class SessionsController < ApplicationController
   
   # 6. 6 ログアウト機能を追加しよう
   def destroy
-    log_out
+    # 7. 2 ログイン中の場合のみログアウト処理を実行します。
+    log_out if logged_in?
     flash[:success] = 'ログアウトしました。'
     redirect_to root_url
   end
-  
 end
