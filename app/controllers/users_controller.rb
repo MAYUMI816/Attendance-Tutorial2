@@ -1,12 +1,14 @@
 class UsersController < ApplicationController
   # 8. 2. 1 ユーザーにログインを要求する
-  before_action :set_user, only: [:show, :edit, :update] # 8. 2. 2
-  before_action :logged_in_user, only: [:show, :edit, :update]
+  before_action :set_user, only: [:show, :edit, :update, :destroy] # 8. 2. 2
+  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy] #8. 5. 2 destroyアクション
   before_action :correct_user, only: [:edit, :update] # 8. 2. 2
+  before_action :admin_user, only: :destroy # 8. 5. 2 destroyアクション
   
   # 8. 4 全てのユーザーを表示するページ
   def index
-    @users = User.all
+    # @users = User.all #インスタンス変数名は全てのユーザーを代入した複数形(s)
+    @users = User.paginate(page: params[:page]) #8.4.2パラメータに基づき、データベースからひとかたまりのデータを取得
   end
   
   def show
@@ -48,6 +50,15 @@ class UsersController < ApplicationController
     end
   end
   
+  # 8. 5. 2 destroyアクション
+
+
+  def destroy
+    @user.destroy
+    flash[:success] = "#{@user.name}のデータを削除しました。"
+    redirect_to users_url
+  end
+  
   private
 # Web経由で外部のユーザーが知る必要は無いため、次に記すようにRubyのprivateキーワードを用いて外部からは使用できないようにします。
     def user_params
@@ -75,5 +86,10 @@ class UsersController < ApplicationController
       # @user = User.find(params[:id])
       # redirect_to(root_url) unless @user == current_user
       redirect_to(root_url) unless current_user?(@user)
+    end
+    
+    # システム管理権限所有かどうか判定します。
+    def admin_user
+      redirect_to root_url unless current_user.admin?
     end
 end

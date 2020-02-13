@@ -13,7 +13,8 @@ class SessionsController < ApplicationController
       log_in user
       # 7. 3 チェックボックスを追加しよう
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      remember_back_or user # 7. 1. 3 rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
+      redirect_back_or user
+      # 7. 1. 3 rememberヘルパーメソッドを作ってlog_inヘルパーメソッドと連携
       # 8. 3redirect_back_orの引数にuserを指定することで、デフォルトのURLを設定
       # redirect_to user
     else
