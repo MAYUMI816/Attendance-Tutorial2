@@ -7,6 +7,9 @@ ja:
           id: ID
           name: 名前
           email: メールアドレス
+          department: 所属 # 9. 1. 2 createとupdateに対応しよう
+          basic_time: 基本時間 # 9. 1. 2 createとupdateに対応しよう
+          work_time: 勤務時間 # 9. 1. 2 createとupdateに対応しよう
           password: パスワード
           password_confirmation: パスワード再入力
           created_at: 作成日
