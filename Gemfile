@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '~> 5.1.6'
+gem 'rails-i18n' # i18nをインストールしよう
 gem 'bcrypt' # 今回追加するgemです
 gem 'faker' # 8.4.1 実際に存在していそうな名前を生成してくれる便利なも
 gem 'bootstrap-sass'
