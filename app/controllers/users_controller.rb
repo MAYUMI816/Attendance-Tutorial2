@@ -15,7 +15,11 @@ class UsersController < ApplicationController
   
   def show
     # @user = User.find(params[:id]) # 5. 2findメソッドを使ってユーザーオブジェクトを取得し、インスタンス変数に代入
-  # 8. 2. 2で削除
+    # 8. 2. 2で削除
+    @first_day = Date.current.beginning_of_month
+    @last_day = @first_day.end_of_month
+  # @first_dayで、当日を取得するためDate.currentを使用
+  # これにRailsのメソッドbeginning_of_monthを繋げる当月の初日を取得可能  
   end
   
   def new

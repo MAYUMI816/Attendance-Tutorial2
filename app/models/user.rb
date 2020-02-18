@@ -1,28 +1,31 @@
 class User < ApplicationRecord
-# 7. 1. 2 「remember_token」という仮想の属性を作成します。
+  has_many :attendances, dependent: :destroy
+# 10.1「remember_token」という仮想の属性を作成。
+# 7. 1. 2 「remember_token」という仮想の属性を作成。
   attr_accessor :remember_token
-  before_save { self.email = email.downcase } 
-  #（self.email）の値をdowncaseメソッドを使って小文字に変換します。
+  before_save { self.email = email.downcase }
+  #（self.email）の値をdowncaseメソッドを使って小文字に変換。
   
   validates :name,  presence: true, length: { maximum: 50 } #name 存在性/最大50文字まで
   # 8. 1. 4 パスワードはスルーして更新できるようにする
   # 9.2.1validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i # 4. 4. 4 メールアドレスの有効性を検証
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i# 4. 4. 4 メールアドレスの有効性を検証
   validates :email, presence: true, length: { maximum: 100 }, #email存在性/最大100文字まで/正規表現によるメールアドレスのフォーマット/一意であること
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: true # 4. 4. 5 一意性の検証     
-validates :department, length: { in: 2..50 }, allow_blank: true #9. 1. 1 バリデーションを設定しよう                    
-validates :basic_time, presence: true #9.2.1
-validates :work_time, presence: true #9.2.1
-has_secure_password
+  validates :department, length: { in: 2..50 }, allow_blank: true #9. 1. 1 バリデーションを設定しよう                    
+  validates :basic_time, presence: true #9.2.1
+  validates :work_time, presence: true #9.2.1
+  has_secure_password
 # 4. 5 Userモデルにpassword_digestカラムを追加し、bcryptgemを追加したしたことでhas_secure_passwordが使用できるように
-validates :password, presence: true, length: { minimum: 6 } , allow_nil: true#password/存在性/最小6文字から
-#4. 5. 1 最小文字数を設定しよう
+  validates :password, presence: true, length: { minimum: 6 } , allow_nil: true
+# password/存在性/最小6文字から
+# 4. 5. 1 最小文字数を設定しよう
 
 # 渡された文字列のハッシュ値を返します。7. 1. 1 ランダムな文字列を作ろう
   def User.digest(string)
-    cost = 
+    cost =
       if ActiveModel::SecurePassword.min_cost
         BCrypt::Engine::MIN_COST
       else
