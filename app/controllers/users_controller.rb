@@ -20,6 +20,7 @@ class UsersController < ApplicationController
     #10.3 でま削除@last_day = @first_day.end_of_month
   # @first_dayで、当日を取得するためDate.currentを使用
   # これにRailsのメソッドbeginning_of_monthを繋げる当月の初日を取得可能  
+  @worked_sum = @attendances.where.not(started_at: nil).count# 10. 7 出勤日数を表示しよう
   end
   
   def new
