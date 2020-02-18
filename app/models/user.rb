@@ -17,7 +17,7 @@ validates :basic_time, presence: true #9.2.1
 validates :work_time, presence: true #9.2.1
 has_secure_password
 # 4. 5 Userモデルにpassword_digestカラムを追加し、bcryptgemを追加したしたことでhas_secure_passwordが使用できるように
-validates :password, presence: true, length: { minimum: 6 } #password/存在性/最小6文字から
+validates :password, presence: true, length: { minimum: 6 } , allow_nil: true#password/存在性/最小6文字から
 #4. 5. 1 最小文字数を設定しよう
 
 # 渡された文字列のハッシュ値を返します。7. 1. 1 ランダムな文字列を作ろう

@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
   # 8. 2. 1 ユーザーにログインを要求する
-  before_action :set_user, only: [:show, :edit, :update, :destroy] # 8. 2. 2
-  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy] #8. 5. 2 destroyアクション
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info] # 8. 2. 2
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info] #8. 5. 2 destroyアクション
   before_action :correct_user, only: [:edit, :update] # 8. 2. 2
-  before_action :admin_user, only: :destroy # 8. 5. 2 destroyアクション
+  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info] # 8. 5. 2 destroyアクション
   
+  
+
   # 8. 4 全てのユーザーを表示するページ
   def index
     # @users = User.all #インスタンス変数名は全てのユーザーを代入した複数形(s)
@@ -58,13 +60,30 @@ class UsersController < ApplicationController
     flash[:success] = "#{@user.name}のデータを削除しました。"
     redirect_to users_url
   end
+
+  def edit_basic_info #9.3.1
+  end
+
+  def update_basic_info #9.3.1
+    if @user.update_attributes(basic_info_params)
+      flash[:success] = "#{@user.name}の基本情報を更新しました。"
+    # 更新成功時の処理
+    else
+    # 更新失敗時の処理
+    flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+    end
+  redirect_to users_url
+  end
+  
+  
   
   private
 # Web経由で外部のユーザーが知る必要は無いため、次に記すようにRubyのprivateキーワードを用いて外部からは使用できないようにします。
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
    
+   def user_params
+      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+    # ９.１department 部門（所属）　カラム追加
+   end
        # beforeフィルター
 
  #8. 2. 2 paramsハッシュからユーザーを取得します。
@@ -93,8 +112,8 @@ class UsersController < ApplicationController
       redirect_to root_url unless current_user.admin?
     end
     
-    def user_params
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
-    # ９.１department 部門　追加
+    def basic_info_params
+     params.require(:user).permit(:department, :basic_time, :work_time)
     end
+    
 end
