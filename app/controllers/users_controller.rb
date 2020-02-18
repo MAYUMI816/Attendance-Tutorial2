@@ -88,6 +88,10 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
     # ９.１department 部門（所属）　カラム追加
    end
+   
+   def basic_info_params
+      params.require(:user).permit(:department, :basic_time, :work_time)
+   end
        # beforeフィルター
 
  #8. 2. 2 paramsハッシュからユーザーを取得します。
